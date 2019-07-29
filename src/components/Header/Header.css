@@ -1,0 +1,25 @@
+.App__logo {
+  height: 10vmin;
+  pointer-events: none;
+  animation: App-logo-spin infinite 20s linear;
+}
+
+.App__header {
+  color: white;
+  font-size: calc(10px + 2vmin);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+.App__title {
+  color: #000;
+}
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
