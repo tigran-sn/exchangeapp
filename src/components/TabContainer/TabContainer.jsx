@@ -37,7 +37,7 @@ export default class TabContainer extends Component {
     if (!marketDataReady) {
       return <Loader />;
     } else {
-      console.log(marketData);
+      // console.log(marketData);
       return (
         <div className="marketData">
           <ul>
@@ -53,6 +53,11 @@ export default class TabContainer extends Component {
                     item.fromCurrencyId
                   )}
                 >
+                  {/* {localStorage
+                    .getItem("favorites")
+                    .includes(item.fromCurrencyId)
+                    ? "Bookmark"
+                    : "Bookmarked"} */}
                   Bookmark
                 </strong>
               </li>
@@ -65,7 +70,14 @@ export default class TabContainer extends Component {
 
   renderFavorites = () => {
     const { favorites } = this.props;
-    return favorites.map((item, index) => <li key={index}>{item}</li>);
+    return favorites.map((item, index) => (
+      <li key={index}>
+        {item}{" "}
+        <strong onClick={this.props.removeFavorite.bind(this, item)}>
+          Remove
+        </strong>
+      </li>
+    ));
   };
 
   render() {

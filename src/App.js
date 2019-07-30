@@ -72,6 +72,19 @@ export default class App extends Component {
       favorites: copiedFavorites
     });
   };
+  removeFavorite = data => {
+    const copiedFavorites = [...this.state.favorites];
+    console.log(data);
+    // return;
+    if (this.state.favorites.includes(data)) {
+      console.log([...copiedFavorites.slice(0, copiedFavorites.indexOf(data))]);
+      copiedFavorites.pop(data);
+    }
+    localStorage.setItem("favorites", JSON.stringify(copiedFavorites));
+    this.setState({
+      favorites: copiedFavorites
+    });
+  };
   render() {
     return (
       <div className="App">
@@ -85,6 +98,7 @@ export default class App extends Component {
           currenciesData={this.state.currenciesData}
           currenciesDataReady={this.state.currenciesDataReady}
           toggleFavorite={this.toggleFavorite}
+          removeFavorite={this.removeFavorite}
         />
       </div>
     );
