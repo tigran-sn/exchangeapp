@@ -19,10 +19,15 @@ export default class App extends Component {
   componentDidMount() {
     this.getCurrenciesData();
     this.getMarketData();
+    this.getInitalFavorites();
   }
   getInitalFavorites = () => {
+    console.log(localStorage.getItem("favorites"));
+    let favorites = localStorage.getItem("favorites")
+      ? JSON.parse(localStorage.getItem("favorites"))
+      : [];
     this.setState({
-      favorites: localStorage.getItem("favorites")
+      favorites
     });
   };
 
@@ -34,12 +39,10 @@ export default class App extends Component {
         return responce.json();
       })
       .then(data => {
-        setTimeout(() => {
-          this.setState({
-            currenciesDataReady: true,
-            currenciesData: data
-          });
-        }, 1000);
+        this.setState({
+          currenciesDataReady: true,
+          currenciesData: data
+        });
       });
   };
   getMarketData = () => {
@@ -50,20 +53,20 @@ export default class App extends Component {
         return responce.json();
       })
       .then(data => {
-        setTimeout(() => {
-          this.setState({
-            marketDataReady: true,
-            marketData: data
-          });
-        }, 1000);
+        this.setState({
+          marketDataReady: true,
+          marketData: data
+        });
       });
   };
 
   toggleFavorite = data => {
-    const copiedFavorites = [...this.state.favorites];
-    console.log(copiedFavorites);
+    let copiedFavorites = [...this.state.favorites];
     if (this.state.favorites.includes(data)) {
-      copiedFavorites.pop(data);
+      copiedFavorites = [
+        ...copiedFavorites.slice(0, copiedFavorites.indexOf(data)),
+        ...copiedFavorites.slice(copiedFavorites.indexOf(data) + 1)
+      ];
     } else {
       copiedFavorites.push(data);
     }
@@ -73,12 +76,12 @@ export default class App extends Component {
     });
   };
   removeFavorite = data => {
-    const copiedFavorites = [...this.state.favorites];
-    console.log(data);
-    // return;
+    let copiedFavorites = [...this.state.favorites];
     if (this.state.favorites.includes(data)) {
-      console.log([...copiedFavorites.slice(0, copiedFavorites.indexOf(data))]);
-      copiedFavorites.pop(data);
+      copiedFavorites = [
+        ...copiedFavorites.slice(0, copiedFavorites.indexOf(data)),
+        ...copiedFavorites.slice(copiedFavorites.indexOf(data) + 1)
+      ];
     }
     localStorage.setItem("favorites", JSON.stringify(copiedFavorites));
     this.setState({

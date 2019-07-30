@@ -1,16 +1,10 @@
 import React, { Component } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Loader from "../Loader";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import "../Tabs/Tabs.css";
 
 export default class TabContainer extends Component {
-  state = {
-    marketData: [],
-    currenciesData: [],
-    marketDataReady: false,
-    currenciesDataReady: false
-  };
-
   renderCurrenciesData = () => {
     const { currenciesData, currenciesDataReady } = this.props;
     if (!currenciesDataReady) {
@@ -47,18 +41,19 @@ export default class TabContainer extends Component {
                   item.price
                 }, Volume: ${item.volume}`}
                 <strong
-                  className="favorite favorite--selected"
+                  className="addRemoveFavorite"
                   onClick={this.props.toggleFavorite.bind(
                     this,
                     item.fromCurrencyId
                   )}
                 >
-                  {/* {localStorage
+                  {localStorage
                     .getItem("favorites")
-                    .includes(item.fromCurrencyId)
-                    ? "Bookmark"
-                    : "Bookmarked"} */}
-                  Bookmark
+                    .includes(item.fromCurrencyId) ? (
+                    <FaStar color="#f9d421" />
+                  ) : (
+                    <FaRegStar color="#f9d421" />
+                  )}
                 </strong>
               </li>
             ))}
@@ -69,12 +64,15 @@ export default class TabContainer extends Component {
   };
 
   renderFavorites = () => {
-    const { favorites } = this.props;
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
     return favorites.map((item, index) => (
       <li key={index}>
         {item}{" "}
-        <strong onClick={this.props.removeFavorite.bind(this, item)}>
-          Remove
+        <strong
+          className="addRemoveFavorite"
+          onClick={this.props.removeFavorite.bind(this, item)}
+        >
+          <FaStar color="#f9d421" />
         </strong>
       </li>
     ));
