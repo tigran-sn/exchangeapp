@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import Loader from "../Loader";
 import "../Tabs/Tabs.css";
 
 export default class TabContainer extends Component {
@@ -9,45 +10,13 @@ export default class TabContainer extends Component {
     marketDataReady: false,
     currenciesDataReady: false
   };
-  componentDidMount() {
-    this.getCurrenciesData();
-    this.getMarketData();
-  }
-
-  getCurrenciesData = () => {
-    const currenciesURL = this.props.currenciesURL;
-    const fetchCurrencies = fetch(currenciesURL);
-    fetchCurrencies
-      .then(responce => {
-        return responce.json();
-      })
-      .then(data => {
-        this.setState({
-          currenciesDataReady: true,
-          currenciesData: data
-        });
-      });
-  };
-  getMarketData = () => {
-    const marketURL = this.props.marketURL;
-    const fetchMarket = fetch(marketURL);
-    fetchMarket
-      .then(responce => {
-        return responce.json();
-      })
-      .then(data => {
-        this.setState({
-          marketDataReady: true,
-          marketData: data
-        });
-      });
-  };
 
   renderCurrenciesData = () => {
-    const { currenciesData, currenciesDataReady } = this.state;
+    const { currenciesData, currenciesDataReady } = this.props;
     if (!currenciesDataReady) {
-      return <span>Loading...</span>;
+      return <Loader />;
     } else {
+      // console.log(currenciesData);
       return (
         <div className="currenciesData">
           <ul>
@@ -61,14 +30,14 @@ export default class TabContainer extends Component {
           </ul>
         </div>
       );
-      // console.log(currenciesData);
     }
   };
   renderMarketData = () => {
-    const { marketData, marketDataReady } = this.state;
+    const { marketData, marketDataReady } = this.props;
     if (!marketDataReady) {
-      return <span>Loading...</span>;
+      return <Loader />;
     } else {
+      console.log(marketData);
       return (
         <div className="marketData">
           <ul>
@@ -77,12 +46,26 @@ export default class TabContainer extends Component {
                 {`From Currency: ${item.fromCurrency}, Price: ${
                   item.price
                 }, Volume: ${item.volume}`}
+                <strong
+                  className="favorite favorite--selected"
+                  onClick={this.props.toggleFavorite.bind(
+                    this,
+                    item.fromCurrencyId
+                  )}
+                >
+                  Bookmark
+                </strong>
               </li>
             ))}
           </ul>
         </div>
       );
     }
+  };
+
+  renderFavorites = () => {
+    const { favorites } = this.props;
+    return favorites.map((item, index) => <li key={index}>{item}</li>);
   };
 
   render() {
@@ -95,11 +78,19 @@ export default class TabContainer extends Component {
           </TabList>
 
           <TabPanel>
-            <h2>Market</h2>
-            {this.renderMarketData()} <h2>Currencies</h2>
-            {this.renderCurrenciesData()}
+            <div className="tabRow">
+              <h2>Market</h2>
+              {this.renderMarketData()}
+              <h2>Currencies</h2>
+              {this.renderCurrenciesData()}
+            </div>
           </TabPanel>
-          <TabPanel>Favorites</TabPanel>
+          <TabPanel>
+            <div className="tabRow">
+              <h2>Favorites</h2>
+              <ul>{this.renderFavorites()}</ul>
+            </div>
+          </TabPanel>
         </Tabs>
       </div>
     );
