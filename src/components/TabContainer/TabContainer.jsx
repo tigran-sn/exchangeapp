@@ -3,19 +3,32 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "../Tabs/Tabs.css";
 
 export default class TabContainer extends Component {
+  state = {
+    marketData: [],
+    currenciesData: [],
+    marketDataReady: false,
+    currenciesDataReady: false
+  };
   componentDidMount() {
-    const marketURL = this.props.marketURL;
+    this.getCurrenciesData();
+    this.getMarketData();
+  }
+
+  getCurrenciesData = () => {
     const currenciesURL = this.props.currenciesURL;
-    const fetchMarket = fetch(marketURL);
-    return fetchMarket
+    const fetchCurrencies = fetch(currenciesURL);
+    fetchCurrencies
       .then(responce => {
         return responce.json();
       })
       .then(data => {
-        // console.log(data);
+        this.setState({
+          currenciesDataReady: true,
+          currenciesData: data
+        });
       });
-  }
-  renderMarketData = () => {
+  };
+  getMarketData = () => {
     const marketURL = this.props.marketURL;
     const fetchMarket = fetch(marketURL);
     fetchMarket
@@ -23,27 +36,70 @@ export default class TabContainer extends Component {
         return responce.json();
       })
       .then(data => {
-        return data.market.map(singleMarket => {
-          console.log(singleMarket);
-          return <span>{singleMarket.fromCurrency}</span>;
+        this.setState({
+          marketDataReady: true,
+          marketData: data
         });
       });
   };
+
+  renderCurrenciesData = () => {
+    const { currenciesData, currenciesDataReady } = this.state;
+    if (!currenciesDataReady) {
+      return <span>Loading...</span>;
+    } else {
+      return (
+        <div className="currenciesData">
+          <ul>
+            {currenciesData.currencies.map(item => (
+              <li key={`currency_${item.currency}`}>
+                {`Currency: ${item.currency}, Currency Name: ${
+                  item.currencyName
+                }`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+      // console.log(currenciesData);
+    }
+  };
+  renderMarketData = () => {
+    const { marketData, marketDataReady } = this.state;
+    if (!marketDataReady) {
+      return <span>Loading...</span>;
+    } else {
+      return (
+        <div className="marketData">
+          <ul>
+            {marketData.market.map(item => (
+              <li key={`market_${item.fromCurrency}`}>
+                {`From Currency: ${item.fromCurrency}, Price: ${
+                  item.price
+                }, Volume: ${item.volume}`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+  };
+
   render() {
     return (
       <div className="tabContainer">
         <Tabs>
           <TabList>
-            <Tab>Favorites</Tab>
             <Tab>USD</Tab>
+            <Tab>Favorites</Tab>
           </TabList>
 
           <TabPanel>
-            <h2>{this.renderMarketData()}</h2>
+            <h2>Market</h2>
+            {this.renderMarketData()} <h2>Currencies</h2>
+            {this.renderCurrenciesData()}
           </TabPanel>
-          <TabPanel>
-            <h2>USD content</h2>
-          </TabPanel>
+          <TabPanel>Favorites</TabPanel>
         </Tabs>
       </div>
     );
