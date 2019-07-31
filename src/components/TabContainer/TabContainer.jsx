@@ -64,7 +64,10 @@ export default class TabContainer extends Component {
   };
 
   renderFavorites = () => {
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    const favorites = localStorage.getItem("favorites")
+      ? JSON.parse(localStorage.getItem("favorites"))
+      : [];
+    console.log(favorites);
     return favorites.map((item, index) => (
       <li key={index}>
         {item}{" "}
@@ -88,6 +91,12 @@ export default class TabContainer extends Component {
           </TabList>
 
           <TabPanel>
+            {/* <button
+              onClick={this.props.sortData.bind(this, this.props.marketData)}
+            >
+              Sort
+            </button> */}
+            <button onClick={this.renderSortedMarketData}>ReRender</button>
             <div className="tabRow">
               <h2>Market</h2>
               {this.renderMarketData()}

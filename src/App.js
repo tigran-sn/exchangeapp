@@ -13,16 +13,30 @@ export default class App extends Component {
     marketData: [],
     currenciesData: [],
     marketDataReady: false,
-    currenciesDataReady: false
+    currenciesDataReady: false,
+    sorted: false
   };
 
+  componentWillMount() {
+    // Check if local storage has "favorites" set. If not, set an empty array
+    if (!localStorage.getItem("favorites")) {
+      localStorage.setItem("favorites", "[]");
+    }
+  }
   componentDidMount() {
     this.getCurrenciesData();
     this.getMarketData();
     this.getInitalFavorites();
   }
+  componentDidUpdate() {
+    // if (!this.state.sorted) {
+    //   this.getMarketData();
+    // } else {
+    //   this.getSortedMarketData();
+    // }
+  }
   getInitalFavorites = () => {
-    console.log(localStorage.getItem("favorites"));
+    console.log(JSON.parse(localStorage.getItem("favorites")));
     let favorites = localStorage.getItem("favorites")
       ? JSON.parse(localStorage.getItem("favorites"))
       : [];
@@ -60,6 +74,23 @@ export default class App extends Component {
       });
   };
 
+  getSortedMarketData = () => {
+    const marketURL = this.state.marketURL;
+    const fetchMarket = fetch(marketURL);
+    fetchMarket
+      .then(responce => {
+        return responce.json();
+      })
+      .then(data => {
+        data.market.sort((a, b) => b.price - a.price);
+        console.log(data);
+        this.setState({
+          marketDataReady: true,
+          marketData: data
+        });
+      });
+  };
+
   toggleFavorite = data => {
     let copiedFavorites = [...this.state.favorites];
     if (this.state.favorites.includes(data)) {
@@ -88,9 +119,15 @@ export default class App extends Component {
       favorites: copiedFavorites
     });
   };
+
+  sortData = () => {
+    this.setState({
+      sorted: !this.state.sorted
+    });
+  };
   render() {
     return (
-      <div className="App">
+      <div className="App" onClick={this.sortData}>
         <Header title="USD Exchange" logo={logo} />
         <TabContainer
           marketURL={this.state.marketURL}
@@ -102,6 +139,7 @@ export default class App extends Component {
           currenciesDataReady={this.state.currenciesDataReady}
           toggleFavorite={this.toggleFavorite}
           removeFavorite={this.removeFavorite}
+          // sortData={this.sortData}
         />
       </div>
     );
