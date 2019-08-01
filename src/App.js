@@ -19,7 +19,7 @@ export default class App extends Component {
 
   componentWillMount() {
     // Check if local storage has "favorites" set. If not, set an empty array
-    if (!localStorage.getItem("favorites")) {
+    if (!JSON.parse(localStorage.getItem("favorites"))) {
       localStorage.setItem("favorites", "[]");
     }
   }
@@ -28,16 +28,10 @@ export default class App extends Component {
     this.getMarketData();
     this.getInitalFavorites();
   }
-  componentDidUpdate() {
-    // if (!this.state.sorted) {
-    //   this.getMarketData();
-    // } else {
-    //   this.getSortedMarketData();
-    // }
-  }
+  componentDidUpdate() {}
   getInitalFavorites = () => {
-    console.log(JSON.parse(localStorage.getItem("favorites")));
-    let favorites = localStorage.getItem("favorites")
+    // console.log(JSON.parse(localStorage.getItem("favorites")));
+    let favorites = JSON.parse(localStorage.getItem("favorites"))
       ? JSON.parse(localStorage.getItem("favorites"))
       : [];
     this.setState({
@@ -69,31 +63,16 @@ export default class App extends Component {
       .then(data => {
         this.setState({
           marketDataReady: true,
-          marketData: data
-        });
-      });
-  };
-
-  getSortedMarketData = () => {
-    const marketURL = this.state.marketURL;
-    const fetchMarket = fetch(marketURL);
-    fetchMarket
-      .then(responce => {
-        return responce.json();
-      })
-      .then(data => {
-        data.market.sort((a, b) => b.price - a.price);
-        console.log(data);
-        this.setState({
-          marketDataReady: true,
-          marketData: data
+          marketData: data.market,
+          toCurrencyId: data.toCurrencyId
         });
       });
   };
 
   toggleFavorite = data => {
+    // debugger;
     let copiedFavorites = [...this.state.favorites];
-    if (this.state.favorites.includes(data)) {
+    if (JSON.stringify(this.state.favorites).includes(JSON.stringify(data))) {
       copiedFavorites = [
         ...copiedFavorites.slice(0, copiedFavorites.indexOf(data)),
         ...copiedFavorites.slice(copiedFavorites.indexOf(data) + 1)
@@ -108,7 +87,7 @@ export default class App extends Component {
   };
   removeFavorite = data => {
     let copiedFavorites = [...this.state.favorites];
-    if (this.state.favorites.includes(data)) {
+    if (JSON.stringify(this.state.favorites).includes(JSON.stringify(data))) {
       copiedFavorites = [
         ...copiedFavorites.slice(0, copiedFavorites.indexOf(data)),
         ...copiedFavorites.slice(copiedFavorites.indexOf(data) + 1)
@@ -120,14 +99,22 @@ export default class App extends Component {
     });
   };
 
-  sortData = () => {
-    this.setState({
-      sorted: !this.state.sorted
-    });
+  sortData = data => {
+    if (!this.state.sorted) {
+      this.setState({
+        sorted: !this.state.sorted,
+        marketData: data.sort((a, b) => b.price - a.price)
+      });
+    } else {
+      this.setState({
+        sorted: !this.state.sorted,
+        marketData: data.sort((a, b) => a.price - b.price)
+      });
+    }
   };
   render() {
     return (
-      <div className="App" onClick={this.sortData}>
+      <div className="App">
         <Header title="USD Exchange" logo={logo} />
         <TabContainer
           marketURL={this.state.marketURL}
@@ -139,7 +126,9 @@ export default class App extends Component {
           currenciesDataReady={this.state.currenciesDataReady}
           toggleFavorite={this.toggleFavorite}
           removeFavorite={this.removeFavorite}
-          // sortData={this.sortData}
+          sortData={this.sortData}
+          sorted={this.state.sorted}
+          renderCount={this.state.renderCount}
         />
       </div>
     );

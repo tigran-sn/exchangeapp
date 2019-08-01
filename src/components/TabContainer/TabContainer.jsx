@@ -10,7 +10,6 @@ export default class TabContainer extends Component {
     if (!currenciesDataReady) {
       return <Loader />;
     } else {
-      // console.log(currenciesData);
       return (
         <div className="currenciesData">
           <ul>
@@ -27,15 +26,15 @@ export default class TabContainer extends Component {
     }
   };
   renderMarketData = () => {
-    const { marketData, marketDataReady } = this.props;
+    let { marketData, marketDataReady } = this.props;
     if (!marketDataReady) {
       return <Loader />;
     } else {
-      // console.log(marketData);
+      // debugger;
       return (
         <div className="marketData">
           <ul>
-            {marketData.market.map(item => (
+            {marketData.map(item => (
               <li key={`market_${item.fromCurrency}`}>
                 {`From Currency: ${item.fromCurrency}, Price: ${
                   item.price
@@ -44,12 +43,13 @@ export default class TabContainer extends Component {
                   className="addRemoveFavorite"
                   onClick={this.props.toggleFavorite.bind(
                     this,
-                    item.fromCurrencyId
+                    item
+                    // item.fromCurrencyId
                   )}
                 >
                   {localStorage
                     .getItem("favorites")
-                    .includes(item.fromCurrencyId) ? (
+                    .includes(JSON.stringify(item)) ? (
                     <FaStar color="#f9d421" />
                   ) : (
                     <FaRegStar color="#f9d421" />
@@ -64,13 +64,13 @@ export default class TabContainer extends Component {
   };
 
   renderFavorites = () => {
+    // debugger;
     const favorites = localStorage.getItem("favorites")
       ? JSON.parse(localStorage.getItem("favorites"))
       : [];
-    console.log(favorites);
     return favorites.map((item, index) => (
       <li key={index}>
-        {item}{" "}
+        {item.fromCurrencyId}
         <strong
           className="addRemoveFavorite"
           onClick={this.props.removeFavorite.bind(this, item)}
@@ -82,6 +82,7 @@ export default class TabContainer extends Component {
   };
 
   render() {
+    const { marketData, marketDataReady } = this.props;
     return (
       <div className="tabContainer">
         <Tabs>
@@ -91,12 +92,9 @@ export default class TabContainer extends Component {
           </TabList>
 
           <TabPanel>
-            {/* <button
-              onClick={this.props.sortData.bind(this, this.props.marketData)}
-            >
-              Sort
-            </button> */}
-            <button onClick={this.renderSortedMarketData}>ReRender</button>
+            <button onClick={this.props.sortData.bind(this, marketData)}>
+              Sort: Descending
+            </button>
             <div className="tabRow">
               <h2>Market</h2>
               {this.renderMarketData()}
