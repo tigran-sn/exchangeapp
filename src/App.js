@@ -51,6 +51,9 @@ export default class App extends Component {
           currenciesDataReady: true,
           currenciesData: data
         });
+      })
+      .catch(error => {
+        throw new Error(error);
       });
   };
   getMarketData = () => {
@@ -66,14 +69,17 @@ export default class App extends Component {
           marketData: data.market,
           toCurrencyId: data.toCurrencyId
         });
+      })
+      .catch(error => {
+        throw new Error(error);
       });
   };
 
   toggleFavorite = data => {
     let copiedFavorites = [...this.state.favorites];
     if (JSON.stringify(this.state.favorites).includes(JSON.stringify(data))) {
-      copiedFavorites = copiedFavorites.filter(function(obj) {
-        return obj.fromCurrencyId !== data.fromCurrencyId;
+      copiedFavorites = copiedFavorites.filter(function(favorite) {
+        return favorite.fromCurrencyId !== data.fromCurrencyId;
       });
     } else {
       copiedFavorites.push(data);
@@ -86,8 +92,8 @@ export default class App extends Component {
   removeFavorite = data => {
     let copiedFavorites = [...this.state.favorites];
     if (JSON.stringify(this.state.favorites).includes(JSON.stringify(data))) {
-      copiedFavorites = copiedFavorites.filter(function(obj) {
-        return obj.fromCurrencyId !== data.fromCurrencyId;
+      copiedFavorites = copiedFavorites.filter(function(favorite) {
+        return favorite.fromCurrencyId !== data.fromCurrencyId;
       });
     }
     localStorage.setItem("favorites", JSON.stringify(copiedFavorites));
@@ -115,8 +121,6 @@ export default class App extends Component {
         <div className="container">
           <Header title="USD Exchange" logo={logo} />
           <TabContainer
-            marketURL={this.state.marketURL}
-            currenciesURL={this.state.currenciesURL}
             favorites={this.state.favorites}
             marketData={this.state.marketData}
             marketDataReady={this.state.marketDataReady}
@@ -126,7 +130,6 @@ export default class App extends Component {
             removeFavorite={this.removeFavorite}
             sortData={this.sortData}
             sorted={this.state.sorted}
-            renderCount={this.state.renderCount}
           />
         </div>
       </div>
