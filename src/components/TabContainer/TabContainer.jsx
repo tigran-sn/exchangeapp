@@ -64,52 +64,61 @@ export default class TabContainer extends Component {
   };
 
   renderFavorites = () => {
-    // debugger;
     const favorites = localStorage.getItem("favorites")
       ? JSON.parse(localStorage.getItem("favorites"))
       : [];
-    return favorites.map((item, index) => (
-      <li key={index}>
-        {item.fromCurrencyId}
-        <strong
-          className="addRemoveFavorite"
-          onClick={this.props.removeFavorite.bind(this, item)}
-        >
-          <FaStar color="#f9d421" />
-        </strong>
-      </li>
-    ));
+    return (
+      <div className="marketData">
+        <ul>
+          {favorites.map(item => (
+            <li key={`favorite_${item.fromCurrency}`}>
+              {`From Currency: ${item.fromCurrency}, Price: ${
+                item.price
+              }, Volume: ${item.volume}`}
+              <strong
+                className="addRemoveFavorite"
+                onClick={this.props.removeFavorite.bind(this, item)}
+              >
+                <FaStar color="#f9d421" />
+              </strong>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
   };
 
   render() {
     const { marketData, marketDataReady } = this.props;
     return (
-      <div className="tabContainer">
-        <Tabs>
-          <TabList>
-            <Tab>USD</Tab>
-            <Tab>Favorites</Tab>
-          </TabList>
+      <main>
+        <div className="tabContainer">
+          <Tabs>
+            <TabList>
+              <Tab>USD</Tab>
+              <Tab>Favorites</Tab>
+            </TabList>
 
-          <TabPanel>
-            <button onClick={this.props.sortData.bind(this, marketData)}>
-              Sort: Descending
-            </button>
-            <div className="tabRow">
-              <h2>Market</h2>
-              {this.renderMarketData()}
-              <h2>Currencies</h2>
-              {this.renderCurrenciesData()}
-            </div>
-          </TabPanel>
-          <TabPanel>
-            <div className="tabRow">
-              <h2>Favorites</h2>
-              <ul>{this.renderFavorites()}</ul>
-            </div>
-          </TabPanel>
-        </Tabs>
-      </div>
+            <TabPanel>
+              <button onClick={this.props.sortData.bind(this, marketData)}>
+                Sort: {this.props.sorted ? "Ascending" : "Descending"}
+              </button>
+              <div className="tabRow">
+                <h2>Market</h2>
+                {this.renderMarketData()}
+                <h2>Currencies</h2>
+                {this.renderCurrenciesData()}
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <div className="tabRow">
+                <h2>Favorites</h2>
+                <ul>{this.renderFavorites()}</ul>
+              </div>
+            </TabPanel>
+          </Tabs>
+        </div>
+      </main>
     );
   }
 }

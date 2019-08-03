@@ -29,8 +29,8 @@ export default class App extends Component {
     this.getInitalFavorites();
   }
   componentDidUpdate() {}
+
   getInitalFavorites = () => {
-    // console.log(JSON.parse(localStorage.getItem("favorites")));
     let favorites = JSON.parse(localStorage.getItem("favorites"))
       ? JSON.parse(localStorage.getItem("favorites"))
       : [];
@@ -70,13 +70,11 @@ export default class App extends Component {
   };
 
   toggleFavorite = data => {
-    // debugger;
     let copiedFavorites = [...this.state.favorites];
     if (JSON.stringify(this.state.favorites).includes(JSON.stringify(data))) {
-      copiedFavorites = [
-        ...copiedFavorites.slice(0, copiedFavorites.indexOf(data)),
-        ...copiedFavorites.slice(copiedFavorites.indexOf(data) + 1)
-      ];
+      copiedFavorites = copiedFavorites.filter(function(obj) {
+        return obj.fromCurrencyId !== data.fromCurrencyId;
+      });
     } else {
       copiedFavorites.push(data);
     }
@@ -88,10 +86,9 @@ export default class App extends Component {
   removeFavorite = data => {
     let copiedFavorites = [...this.state.favorites];
     if (JSON.stringify(this.state.favorites).includes(JSON.stringify(data))) {
-      copiedFavorites = [
-        ...copiedFavorites.slice(0, copiedFavorites.indexOf(data)),
-        ...copiedFavorites.slice(copiedFavorites.indexOf(data) + 1)
-      ];
+      copiedFavorites = copiedFavorites.filter(function(obj) {
+        return obj.fromCurrencyId !== data.fromCurrencyId;
+      });
     }
     localStorage.setItem("favorites", JSON.stringify(copiedFavorites));
     this.setState({
@@ -115,21 +112,23 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header title="USD Exchange" logo={logo} />
-        <TabContainer
-          marketURL={this.state.marketURL}
-          currenciesURL={this.state.currenciesURL}
-          favorites={this.state.favorites}
-          marketData={this.state.marketData}
-          marketDataReady={this.state.marketDataReady}
-          currenciesData={this.state.currenciesData}
-          currenciesDataReady={this.state.currenciesDataReady}
-          toggleFavorite={this.toggleFavorite}
-          removeFavorite={this.removeFavorite}
-          sortData={this.sortData}
-          sorted={this.state.sorted}
-          renderCount={this.state.renderCount}
-        />
+        <div className="container">
+          <Header title="USD Exchange" logo={logo} />
+          <TabContainer
+            marketURL={this.state.marketURL}
+            currenciesURL={this.state.currenciesURL}
+            favorites={this.state.favorites}
+            marketData={this.state.marketData}
+            marketDataReady={this.state.marketDataReady}
+            currenciesData={this.state.currenciesData}
+            currenciesDataReady={this.state.currenciesDataReady}
+            toggleFavorite={this.toggleFavorite}
+            removeFavorite={this.removeFavorite}
+            sortData={this.sortData}
+            sorted={this.state.sorted}
+            renderCount={this.state.renderCount}
+          />
+        </div>
       </div>
     );
   }
