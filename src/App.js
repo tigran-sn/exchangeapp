@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import Header from "./components/Header";
-import "./App.css";
-// import Tabs from "./components/Tabs/Tabs";
 import TabContainer from "./components/TabContainer/TabContainer";
+// import PropTypes from "prop-types";
+import "./App.css";
 
 export default class App extends Component {
   state = {
@@ -11,9 +11,8 @@ export default class App extends Component {
     currenciesURL: "https://exchange-test-app.herokuapp.com/currencies",
     favorites: [],
     marketData: [],
-    currenciesData: [],
-    marketDataReady: false,
-    currenciesDataReady: false,
+    currenciesData: {},
+    dataIsReady: false,
     sorted: false
   };
 
@@ -24,8 +23,7 @@ export default class App extends Component {
     }
   }
   componentDidMount() {
-    this.getCurrenciesData();
-    this.getMarketData();
+    this.getData();
     this.getInitalFavorites();
   }
   componentDidUpdate() {}
@@ -39,25 +37,9 @@ export default class App extends Component {
     });
   };
 
-  getCurrenciesData = () => {
-    const currenciesURL = this.state.currenciesURL;
-    const fetchCurrencies = fetch(currenciesURL);
-    fetchCurrencies
-      .then(responce => {
-        return responce.json();
-      })
-      .then(data => {
-        this.setState({
-          currenciesDataReady: true,
-          currenciesData: data
-        });
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-  };
-  getMarketData = () => {
+  getData = () => {
     const marketURL = this.state.marketURL;
+    const currenciesURL = this.state.currenciesURL;
     const fetchMarket = fetch(marketURL);
     fetchMarket
       .then(responce => {
@@ -65,9 +47,18 @@ export default class App extends Component {
       })
       .then(data => {
         this.setState({
-          marketDataReady: true,
           marketData: data.market,
           toCurrencyId: data.toCurrencyId
+        });
+        return fetch(currenciesURL);
+      })
+      .then(responce => {
+        return responce.json();
+      })
+      .then(data => {
+        this.setState({
+          currenciesData: data,
+          dataIsReady: true
         });
       })
       .catch(error => {
@@ -116,23 +107,32 @@ export default class App extends Component {
     }
   };
   render() {
+    const {
+      favorites,
+      marketData,
+      currenciesData,
+      sorted,
+      dataIsReady
+    } = this.state;
     return (
       <div className="App">
         <div className="container">
           <Header title="USD Exchange" logo={logo} />
           <TabContainer
-            favorites={this.state.favorites}
-            marketData={this.state.marketData}
-            marketDataReady={this.state.marketDataReady}
-            currenciesData={this.state.currenciesData}
-            currenciesDataReady={this.state.currenciesDataReady}
+            favorites={favorites}
+            marketData={marketData}
+            currenciesData={currenciesData}
             toggleFavorite={this.toggleFavorite}
             removeFavorite={this.removeFavorite}
             sortData={this.sortData}
-            sorted={this.state.sorted}
+            sorted={sorted}
+            dataIsReady={dataIsReady}
           />
         </div>
       </div>
     );
   }
 }
+// App.propTypes = {
+//   maketData: PropTypes.number
+// };

@@ -1,32 +1,12 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Loader from "../Loader";
 import { FaRegStar, FaStar } from "react-icons/fa";
 
 export default class MarketData extends Component {
-  renderCurrenciesData = () => {
-    const { currenciesData, currenciesDataReady } = this.props;
-    if (!currenciesDataReady) {
-      return <Loader />;
-    } else {
-      return (
-        <div className="currenciesData">
-          <ul>
-            {currenciesData.currencies.map(item => (
-              <li key={`currency_${item.currency}`}>
-                {`Currency: ${item.currency}, Currency Name: ${
-                  item.currencyName
-                }`}
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    }
-  };
-
   renderMarketData = () => {
-    let { marketData, marketDataReady } = this.props;
-    if (!marketDataReady) {
+    let { marketData, currenciesData, dataIsReady } = this.props;
+    if (!dataIsReady) {
       return <Loader />;
     } else {
       // debugger;
@@ -54,6 +34,7 @@ export default class MarketData extends Component {
                     <FaRegStar color="#f9d421" />
                   )}
                 </strong>
+                <span>{currenciesData.currencies[0].currency}</span>
               </li>
             ))}
           </ul>
@@ -62,19 +43,19 @@ export default class MarketData extends Component {
     }
   };
   render() {
-    const { marketData, marketDataReady } = this.props;
+    const { marketData } = this.props;
     return (
       <>
         <button onClick={this.props.sortData.bind(this, marketData)}>
           Sort: {this.props.sorted ? "Ascending" : "Descending"}
         </button>
-        <div className="tabRow">
-          <h2>Market</h2>
-          {this.renderMarketData()}
-          <h2>Currencies</h2>
-          {this.renderCurrenciesData()}
-        </div>
+        <div className="tabRow">{this.renderMarketData()}</div>
       </>
     );
   }
 }
+MarketData.propTypes = {
+  marketData: PropTypes.array,
+  currenciesData: PropTypes.array,
+  dataIsReady: PropTypes.bool
+};

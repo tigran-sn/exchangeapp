@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import MarketData from "../MarketData/MarketData";
 import Favorites from "../Favorites";
@@ -6,9 +7,8 @@ import "../Tabs/Tabs.css";
 
 const TabContainer = ({
   marketData,
-  marketDataReady,
+  dataIsReady,
   currenciesData,
-  currenciesDataReady,
   toggleFavorite,
   sortData,
   removeFavorite,
@@ -26,13 +26,11 @@ const TabContainer = ({
           <TabPanel>
             <MarketData
               marketData={marketData}
-              marketDataReady={marketDataReady}
+              dataIsReady={dataIsReady}
               currenciesData={currenciesData}
-              currenciesDataReady={currenciesDataReady}
               toggleFavorite={toggleFavorite}
               sortData={sortData}
               sorted={sorted}
-              // renderCount={this.props.renderCount}
             />
           </TabPanel>
           <TabPanel>
@@ -45,3 +43,12 @@ const TabContainer = ({
 };
 
 export default TabContainer;
+TabContainer.propTypes = {
+  marketData: PropTypes.array,
+  dataIsReady: PropTypes.bool,
+  currenciesData: PropTypes.object,
+  toggleFavorite: PropTypes.func,
+  sortData: PropTypes.func,
+  removeFavorite: PropTypes.func,
+  sorted: PropTypes.bool
+};

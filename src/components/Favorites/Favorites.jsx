@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 // import Loader from "../Loader";
 import { FaStar } from "react-icons/fa";
 
@@ -34,3 +35,6 @@ export default class Favorites extends Component {
     );
   }
 }
+Favorites.propTypes = {
+  removeFavorite: PropTypes.func
+};
