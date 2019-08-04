@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Loader from "../Loader";
 import { FaRegStar, FaStar } from "react-icons/fa";
+import { currencySymbol } from "../../helpers";
 
 export default class MarketData extends Component {
   renderMarketData = () => {
-    let { marketData, currenciesData, dataIsReady } = this.props;
+    let { marketData, dataIsReady } = this.props;
     if (!dataIsReady) {
       return <Loader />;
     } else {
@@ -17,14 +18,12 @@ export default class MarketData extends Component {
               <li key={`market_${item.fromCurrency}`}>
                 {`From Currency: ${item.fromCurrency}, Price: ${
                   item.price
-                }, Volume: ${item.volume}`}
+                }, Volume: ${item.volume}, Sign: ${currencySymbol(
+                  item.fromCurrency
+                )} Currency Name: ${item.currencyName}`}
                 <strong
                   className="addRemoveFavorite"
-                  onClick={this.props.toggleFavorite.bind(
-                    this,
-                    item
-                    // item.fromCurrencyId
-                  )}
+                  onClick={this.props.toggleFavorite.bind(this, item)}
                 >
                   {localStorage
                     .getItem("favorites")
@@ -34,7 +33,6 @@ export default class MarketData extends Component {
                     <FaRegStar color="#f9d421" />
                   )}
                 </strong>
-                <span>{currenciesData.currencies[0].currency}</span>
               </li>
             ))}
           </ul>

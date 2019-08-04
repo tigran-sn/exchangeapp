@@ -14,7 +14,7 @@ export default class Favorites extends Component {
           <li key={`favorite_${item.fromCurrency}`}>
             {`From Currency: ${item.fromCurrency}, Price: ${
               item.price
-            }, Volume: ${item.volume}`}
+            }, Volume: ${item.volume}, Currency Name: ${item.currencyName}`}
             <strong
               className="addRemoveFavorite"
               onClick={this.props.removeFavorite.bind(this, item)}

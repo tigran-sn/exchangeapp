@@ -56,9 +56,16 @@ export default class App extends Component {
         return responce.json();
       })
       .then(data => {
+        const fullData = this.state.marketData.map(item => {
+          item.currencyName = data.currencies.filter(curr => {
+            return curr.currencyId === item.fromCurrencyId;
+          })[0]["currencyName"];
+          return item;
+        });
         this.setState({
           currenciesData: data,
-          dataIsReady: true
+          dataIsReady: true,
+          marketData: fullData
         });
       })
       .catch(error => {
@@ -112,7 +119,8 @@ export default class App extends Component {
       marketData,
       currenciesData,
       sorted,
-      dataIsReady
+      dataIsReady,
+      fullData
     } = this.state;
     return (
       <div className="App">
@@ -127,6 +135,7 @@ export default class App extends Component {
             sortData={this.sortData}
             sorted={sorted}
             dataIsReady={dataIsReady}
+            fullData={fullData}
           />
         </div>
       </div>
