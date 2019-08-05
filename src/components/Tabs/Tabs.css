@@ -1,22 +1,24 @@
-.react-tabs {}
+.react-tabs {
+}
 
 .react-tabs__tab-list {
-    list-style-type: none;
-    display: flex;
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
 }
 
 .react-tabs__tab {
-    min-width: 100px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #000;
-    cursor: pointer;
-    background-color: #f6f6f6;
-    padding: 5px 15px;
+  min-width: 100px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+  background-color: #f6f6f6;
+  padding: 5px 15px;
 }
 
 .react-tabs__tab--selected {
-    color: #fff;
-    cursor: default;
-    background-color: #c2185b;
+  color: #fff;
+  cursor: default;
+  background-color: #d80824;
 }

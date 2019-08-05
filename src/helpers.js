@@ -32,3 +32,10 @@ export function currencySymbol(currency_name) {
     return currency_symbols[currency_name];
   }
 }
+
+export function calculate(usd, price) {
+  if (typeof usd === "number" && usd >= 0) {
+    return (usd / price).toFixed(2);
+  }
+  return "Ivalid USD value";
+}
