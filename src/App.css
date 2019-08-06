@@ -1,39 +1,37 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  background-color: var(--brown, #424242);
+    background-color: var(--brown, #424242);
 }
 
 ul {
-  list-style-type: none;
-  padding-left: 0;
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .fx {
-  display: flex;
+    display: flex;
 }
 
 .fx-center-h {
-  justify-content: center;
+    justify-content: center;
 }
 
 .fx-center-v {
-  align-items: center;
+    align-items: center;
 }
 
-.App {
-  padding-bottom: 50px;
-}
+.App {}
 
 .App__title {
-  color: var(--blue, #0893d8);
+    color: var(--blue, #0893d8);
 }
 
 .container {
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 15px;
-  padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
 }
