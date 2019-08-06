@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import Header from "./components/Header";
 import TabContainer from "./components/TabContainer/TabContainer";
-// import PropTypes from "prop-types";
 import "./App.css";
 
 export default class App extends Component {
@@ -16,7 +15,6 @@ export default class App extends Component {
   };
 
   componentWillMount() {
-    // Check if local storage has "favorites" set. If not, set an empty array
     if (!JSON.parse(localStorage.getItem("favorites"))) {
       localStorage.setItem("favorites", "[]");
     }
@@ -129,6 +127,3 @@ export default class App extends Component {
     );
   }
 }
-// App.propTypes = {
-//   maketData: PropTypes.number
-// };
