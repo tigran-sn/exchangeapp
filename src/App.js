@@ -11,7 +11,6 @@ export default class App extends Component {
     currenciesURL: "https://exchange-test-app.herokuapp.com/currencies",
     favorites: [],
     marketData: [],
-    currenciesData: {},
     dataIsReady: false,
     sorted: false
   };
@@ -38,10 +37,8 @@ export default class App extends Component {
   };
 
   getData = () => {
-    const marketURL = this.state.marketURL;
-    const currenciesURL = this.state.currenciesURL;
-    const fetchMarket = fetch(marketURL);
-    fetchMarket
+    const { marketURL, currenciesURL } = this.state;
+    fetch(marketURL)
       .then(responce => {
         return responce.json();
       })
@@ -63,7 +60,6 @@ export default class App extends Component {
           return item;
         });
         this.setState({
-          currenciesData: data,
           dataIsReady: true,
           marketData: fullData
         });
@@ -114,14 +110,7 @@ export default class App extends Component {
     }
   };
   render() {
-    const {
-      favorites,
-      marketData,
-      currenciesData,
-      sorted,
-      dataIsReady,
-      fullData
-    } = this.state;
+    const { favorites, marketData, sorted, dataIsReady } = this.state;
     return (
       <div className="App">
         <div className="container">
@@ -129,13 +118,11 @@ export default class App extends Component {
           <TabContainer
             favorites={favorites}
             marketData={marketData}
-            currenciesData={currenciesData}
             toggleFavorite={this.toggleFavorite}
             removeFavorite={this.removeFavorite}
             sortData={this.sortData}
             sorted={sorted}
             dataIsReady={dataIsReady}
-            fullData={fullData}
           />
         </div>
       </div>

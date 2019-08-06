@@ -19,12 +19,18 @@ export default class Favorites extends Component {
           </div>
           <ul className="data__header">
             <li className="fx fx-center-v data__headerItem">
-              <span className="data__headerCol data__headerCol1">
+              <span className="data__col data__col1 data__headerCol data__headerCol1">
                 Currency Name
               </span>
-              <span className="data__headerCol data__headerCol2">Code</span>
-              <span className="data__headerCol data__headerCol3">Price</span>
-              <span className="data__headerCol data__headerCol4">Volume</span>
+              <span className="data__col data__col2 data__headerCol data__headerCol2">
+                Code
+              </span>
+              <span className="data__col data__col3 data__headerCol data__headerCol3">
+                Price
+              </span>
+              <span className="data__col data__col4 data__headerCol data__headerCol4">
+                Volume
+              </span>
             </li>
           </ul>
           <ul>
@@ -33,18 +39,18 @@ export default class Favorites extends Component {
                 key={`favorite_${item.fromCurrency}`}
                 className="fx fx-center-v data__listItem"
               >
-                <span className="data__listCol data__listCol1">
+                <span className="data__col data__col1 data__listCol data__listCol1">
                   {item.currencyName}
                 </span>
-                <span className="data__listCol data__listCol2">
+                <span className="data__col data__col2 data__listCol data__listCol2">
                   {`${item.fromCurrency} (${currencySymbol(
                     item.fromCurrency
                   )})`}
                 </span>
-                <span className="data__listCol data__listCol3">
+                <span className="data__col data__col3 data__listCol data__listCol3">
                   {item.price}
                 </span>
-                <span className="data__listCol data__listCol4">
+                <span className="data__col data__col4 data__listCol data__listCol4">
                   {item.volume}
                 </span>
                 <strong
