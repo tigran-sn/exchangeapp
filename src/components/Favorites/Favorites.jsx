@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-// import Loader from "../Loader";
 import { FaStar } from "react-icons/fa";
 import { currencySymbol } from "../../helpers";
 
