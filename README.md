@@ -1,4 +1,4 @@
-## GitHub Pages
+# GitHub Pages
 
 This project is deployed in the [GitHub Pages](https://tikhub.github.io/exchangeapp/)
 
